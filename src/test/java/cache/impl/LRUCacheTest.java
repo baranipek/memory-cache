@@ -6,10 +6,12 @@ import cache.helper.TestData;
 import cache.helper.TestDataHelper;
 import org.junit.Test;
 
+import java.time.LocalDateTime;
 import java.util.ConcurrentModificationException;
 import java.util.Date;
 import java.util.stream.IntStream;
 
+import static java.time.temporal.ChronoUnit.MILLIS;
 import static junit.framework.TestCase.assertNull;
 import static org.junit.Assert.*;
 
@@ -111,21 +113,24 @@ public class LRUCacheTest {
         }
 
         //when
-        long cacheTimeCalculation = (new Date()).getTime();
+        LocalDateTime beforeCacheHit = LocalDateTime.now();
         for (int j = 0; j < 1000; ++j) {
             for (int i = 0; i < 100; ++i) {
                 cache.get(i);
             }
         }
+        LocalDateTime afterCacheHit = LocalDateTime.now();
 
-        cacheTimeCalculation = (cacheTimeCalculation - (new Date().getTime())) * (-1);
-        long withoutCacheTimeCalculation = (new Date()).getTime();
+        long cacheTimeCalculation  = MILLIS.between(beforeCacheHit,afterCacheHit);
+        LocalDateTime beforeWithoutCacheHit = LocalDateTime.now();
         for (int j = 0; j < 1000; ++j) {
             for (int i = 0; i < 100; ++i) {
                 TestDataHelper.getResourceByKey(i);
             }
         }
-        withoutCacheTimeCalculation = (withoutCacheTimeCalculation - (new Date().getTime())) * (-1);
+        LocalDateTime afterWithoutCacheHit = LocalDateTime.now();
+
+        long withoutCacheTimeCalculation = MILLIS.between(beforeWithoutCacheHit,afterWithoutCacheHit);
         // then
         assertTrue(withoutCacheTimeCalculation > cacheTimeCalculation);
     }
