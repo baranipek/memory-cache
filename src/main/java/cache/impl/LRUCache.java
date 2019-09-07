@@ -12,7 +12,7 @@ public class LRUCache<K, V> implements Cache<K, V> {
     private final Map<K, V> cache;
 
     /**
-     * Constructs a new cache.impl.LRUCache source and capacity
+     * Constructs a new LRUCache with source and capacity , it is access-ordered
      *
      * @param resource    the source to be queried in order to satisfy request
      * @param maxCapacity maximum capacity of the cache, which when reached will result in the LRU
@@ -57,6 +57,9 @@ public class LRUCache<K, V> implements Cache<K, V> {
         }
     }
 
+    /**
+     * Return the size of the cache
+     */
     public int getSize() {
         return cache.size();
     }
